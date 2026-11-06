@@ -1,11 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Venue Ticketing System</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>hello world</h1>
+
+  <h1>City Theatre - Seat Selection</h1>
+  <p>Click a seat to see its details, then press Add to Cart.</p>
+
+  <div class="legend">
+    <span><span class="box available"></span> Available</span>
+    <span><span class="box inspected"></span> Selected</span>
+    <span><span class="box incart"></span> In Cart</span>
+    <span><span class="box sold"></span> Sold</span>
+  </div>
+
+  <div class="main">
+
+    <div class="map-area">
+
+      <div class="controls">
+        <button id="zoomIn">Zoom In</button>
+        <button id="zoomOut">Zoom Out</button>
+        <button id="moveUp">Up</button>
+        <button id="moveDown">Down</button>
+        <button id="moveLeft">Left</button>
+        <button id="moveRight">Right</button>
+        <button id="moveReset">Reset View</button>
+      </div>
+
+      <div class="viewport" id="viewport">
+        <div class="canvas" id="canvas">
+          <div class="stage">STAGE</div>
+          <div id="venueSections"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="side-area">
+
+      <div class="box-panel">
+        <h3>Seat Info</h3>
+        <p id="inspectorEmpty">No seat selected.</p>
+        <div id="inspectorDetails" hidden>
+          <p>Section: <span id="detailSection"></span></p>
+          <p>Seat: <span id="detailSeat"></span></p>
+          <p>Category: <span id="detailCategory"></span></p>
+          <p>Price: <span id="detailPrice"></span></p>
+          <p>Status: <span id="detailStatus"></span></p>
+          <button id="cartActionBtn">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="box-panel">
+        <h3>Cart</h3>
+        <ul id="cartList"></ul>
+        <p id="cartEmpty">Cart is empty.</p>
+        <p><b>Total: <span id="cartTotal">$0</span></b></p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="venueData.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
