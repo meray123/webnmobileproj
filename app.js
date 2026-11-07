@@ -1,5 +1,13 @@
 const venueSections = document.getElementById("venueSections");
 
+const inspectorEmpty = document.getElementById("inspectorEmpty");
+const inspectorDetails = document.getElementById("inspectorDetails");
+const detailSection = document.getElementById("detailSection");
+const detailSeat = document.getElementById("detailSeat");
+const detailCategory = document.getElementById("detailCategory");
+const detailPrice = document.getElementById("detailPrice");
+const detailStatus = document.getElementById("detailStatus");
+
 function buildVenue() {
   VENUE.sections.forEach(function (section) {
     const categoryInfo = VENUE.priceCategories[section.category];
@@ -33,10 +41,21 @@ function buildVenue() {
           seatBtn.className = "seat";
           seatBtn.textContent = seatNumber;
 
+          seatBtn.dataset.section = section.name;
+          seatBtn.dataset.category = categoryInfo.label;
+          seatBtn.dataset.price = categoryInfo.price;
+          seatBtn.dataset.row = row;
+          seatBtn.dataset.seat = seatNumber;
+          seatBtn.dataset.sold = sold;
+
           if (sold) {
             seatBtn.classList.add("is-sold");
             seatBtn.disabled = true;
           }
+
+          seatBtn.addEventListener("click", function () {
+            inspectSeat(seatBtn);
+          });
 
           rowDiv.appendChild(seatBtn);
         }
@@ -50,6 +69,17 @@ function buildVenue() {
     sectionDiv.appendChild(blocksDiv);
     venueSections.appendChild(sectionDiv);
   });
+}
+
+function inspectSeat(seatBtn) {
+  inspectorEmpty.hidden = true;
+  inspectorDetails.hidden = false;
+
+  detailSection.textContent = seatBtn.dataset.section;
+  detailSeat.textContent = "Row " + seatBtn.dataset.row + ", Seat " + seatBtn.dataset.seat;
+  detailCategory.textContent = seatBtn.dataset.category;
+  detailPrice.textContent = "$" + seatBtn.dataset.price;
+  detailStatus.textContent = "Available";
 }
 
 buildVenue();
