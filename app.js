@@ -7,6 +7,15 @@ const detailSeat = document.getElementById("detailSeat");
 const detailCategory = document.getElementById("detailCategory");
 const detailPrice = document.getElementById("detailPrice");
 const detailStatus = document.getElementById("detailStatus");
+const cartActionBtn = document.getElementById("cartActionBtn");
+
+const cartList = document.getElementById("cartList");
+const cartEmpty = document.getElementById("cartEmpty");
+const cartTotal = document.getElementById("cartTotal");
+
+let currentSeat = null;
+
+let cart = [];
 
 function buildVenue() {
   VENUE.sections.forEach(function (section) {
@@ -72,6 +81,8 @@ function buildVenue() {
 }
 
 function inspectSeat(seatBtn) {
+  currentSeat = seatBtn;
+
   inspectorEmpty.hidden = true;
   inspectorDetails.hidden = false;
 
@@ -81,5 +92,44 @@ function inspectSeat(seatBtn) {
   detailPrice.textContent = "$" + seatBtn.dataset.price;
   detailStatus.textContent = "Available";
 }
+
+function addToCart() {
+  if (!currentSeat) return;
+
+  cart.push({
+    section: currentSeat.dataset.section,
+    row: currentSeat.dataset.row,
+    seat: currentSeat.dataset.seat,
+    price: Number(currentSeat.dataset.price),
+  });
+
+  currentSeat.classList.add("is-in-cart");
+
+  renderCart();
+}
+
+function renderCart() {
+  cartList.innerHTML = "";
+
+  if (cart.length === 0) {
+    cartEmpty.hidden = false;
+  } else {
+    cartEmpty.hidden = true;
+
+    cart.forEach(function (item) {
+      const li = document.createElement("li");
+      li.textContent = item.section + " - Row " + item.row + ", Seat " + item.seat + " ($" + item.price + ")";
+      cartList.appendChild(li);
+    });
+  }
+
+  let total = 0;
+  cart.forEach(function (item) {
+    total = total + item.price;
+  });
+  cartTotal.textContent = "$" + total;
+}
+
+cartActionBtn.addEventListener("click", addToCart);
 
 buildVenue();

@@ -104,3 +104,9 @@
   color: #eee;
   cursor: not-allowed;
 }
+
+.seat.is-in-cart {
+  background-color: #4CAF50;
+  color: white;
+  border-color: #2e7031;
+}
