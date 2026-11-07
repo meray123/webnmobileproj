@@ -54,3 +54,53 @@
   font-weight: bold;
   letter-spacing: 2px;
 }
+
+.venue-section {
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.section-heading {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.section-blocks {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.seat-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-bottom: 3px;
+}
+
+.seat {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #555;
+  background-color: #ffffff;
+  font-size: 9px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.seat:hover:not(:disabled) {
+  background-color: #e8f5e9;
+}
+
+.seat.is-sold {
+  background-color: #999999;
+  border-color: #666;
+  color: #eee;
+  cursor: not-allowed;
+}
