@@ -90,22 +90,59 @@ function inspectSeat(seatBtn) {
   detailSeat.textContent = "Row " + seatBtn.dataset.row + ", Seat " + seatBtn.dataset.seat;
   detailCategory.textContent = seatBtn.dataset.category;
   detailPrice.textContent = "$" + seatBtn.dataset.price;
-  detailStatus.textContent = "Available";
+
+  if (seatBtn.classList.contains("is-in-cart")) {
+    detailStatus.textContent = "In cart";
+    cartActionBtn.textContent = "Remove from Cart";
+  } else {
+    detailStatus.textContent = "Available";
+    cartActionBtn.textContent = "Add to Cart";
+  }
 }
 
 function addToCart() {
   if (!currentSeat) return;
+  if (currentSeat.classList.contains("is-in-cart")) return;
 
   cart.push({
     section: currentSeat.dataset.section,
     row: currentSeat.dataset.row,
     seat: currentSeat.dataset.seat,
     price: Number(currentSeat.dataset.price),
+    seatBtn: currentSeat,
   });
 
   currentSeat.classList.add("is-in-cart");
 
   renderCart();
+  inspectSeat(currentSeat);
+}
+
+function removeFromCart(item) {
+  const index = cart.indexOf(item);
+  if (index === -1) return;
+
+  cart.splice(index, 1);
+  item.seatBtn.classList.remove("is-in-cart");
+
+  renderCart();
+
+  if (currentSeat === item.seatBtn) {
+    inspectSeat(currentSeat);
+  }
+}
+
+function cartButtonClicked() {
+  if (!currentSeat) return;
+
+  if (currentSeat.classList.contains("is-in-cart")) {
+    const item = cart.find(function (c) {
+      return c.seatBtn === currentSeat;
+    });
+    if (item) removeFromCart(item);
+  } else {
+    addToCart();
+  }
 }
 
 function renderCart() {
@@ -118,7 +155,18 @@ function renderCart() {
 
     cart.forEach(function (item) {
       const li = document.createElement("li");
-      li.textContent = item.section + " - Row " + item.row + ", Seat " + item.seat + " ($" + item.price + ")";
+
+      const label = document.createElement("span");
+      label.textContent = item.section + " - Row " + item.row + ", Seat " + item.seat + " ($" + item.price + ")";
+
+      const removeBtn = document.createElement("button");
+      removeBtn.textContent = "Remove";
+      removeBtn.addEventListener("click", function () {
+        removeFromCart(item);
+      });
+
+      li.appendChild(label);
+      li.appendChild(removeBtn);
       cartList.appendChild(li);
     });
   }
@@ -130,6 +178,6 @@ function renderCart() {
   cartTotal.textContent = "$" + total;
 }
 
-cartActionBtn.addEventListener("click", addToCart);
+cartActionBtn.addEventListener("click", cartButtonClicked);
 
 buildVenue();
