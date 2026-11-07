@@ -13,9 +13,15 @@ const cartList = document.getElementById("cartList");
 const cartEmpty = document.getElementById("cartEmpty");
 const cartTotal = document.getElementById("cartTotal");
 
+const canvas = document.getElementById("canvas");
+
 let currentSeat = null;
 
 let cart = [];
+
+let zoomLevel = 1;
+let panX = 0;
+let panY = 0;
 
 function buildVenue() {
   VENUE.sections.forEach(function (section) {
@@ -179,5 +185,56 @@ function renderCart() {
 }
 
 cartActionBtn.addEventListener("click", cartButtonClicked);
+
+function updateCanvasView() {
+  canvas.style.transform = "translate(" + panX + "px, " + panY + "px) scale(" + zoomLevel + ")";
+}
+
+function zoomIn() {
+  zoomLevel = zoomLevel + 0.1;
+  if (zoomLevel > 2) zoomLevel = 2;
+  updateCanvasView();
+}
+
+function zoomOut() {
+  zoomLevel = zoomLevel - 0.1;
+  if (zoomLevel < 0.5) zoomLevel = 0.5;
+  updateCanvasView();
+}
+
+function moveUp() {
+  panY = panY + 40;
+  updateCanvasView();
+}
+
+function moveDown() {
+  panY = panY - 40;
+  updateCanvasView();
+}
+
+function moveLeft() {
+  panX = panX + 40;
+  updateCanvasView();
+}
+
+function moveRight() {
+  panX = panX - 40;
+  updateCanvasView();
+}
+
+function resetView() {
+  zoomLevel = 1;
+  panX = 0;
+  panY = 0;
+  updateCanvasView();
+}
+
+document.getElementById("zoomIn").addEventListener("click", zoomIn);
+document.getElementById("zoomOut").addEventListener("click", zoomOut);
+document.getElementById("moveUp").addEventListener("click", moveUp);
+document.getElementById("moveDown").addEventListener("click", moveDown);
+document.getElementById("moveLeft").addEventListener("click", moveLeft);
+document.getElementById("moveRight").addEventListener("click", moveRight);
+document.getElementById("moveReset").addEventListener("click", resetView);
 
 buildVenue();
