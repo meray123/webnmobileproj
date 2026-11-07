@@ -51,11 +51,13 @@ function buildVenue() {
         for (let s = 0; s < block.seatsPerRow; s++) {
           const seatNumber = s + 1;
           const sold = isSeatSold(r, s);
+          const seatId = block.id + "-" + row + seatNumber;
 
           const seatBtn = document.createElement("button");
           seatBtn.className = "seat";
           seatBtn.textContent = seatNumber;
 
+          seatBtn.dataset.seatId = seatId;
           seatBtn.dataset.section = section.name;
           seatBtn.dataset.category = categoryInfo.label;
           seatBtn.dataset.price = categoryInfo.price;
@@ -111,6 +113,7 @@ function addToCart() {
   if (currentSeat.classList.contains("is-in-cart")) return;
 
   cart.push({
+    seatId: currentSeat.dataset.seatId,
     section: currentSeat.dataset.section,
     row: currentSeat.dataset.row,
     seat: currentSeat.dataset.seat,
@@ -120,6 +123,7 @@ function addToCart() {
 
   currentSeat.classList.add("is-in-cart");
 
+  saveCart();
   renderCart();
   inspectSeat(currentSeat);
 }
@@ -131,6 +135,7 @@ function removeFromCart(item) {
   cart.splice(index, 1);
   item.seatBtn.classList.remove("is-in-cart");
 
+  saveCart();
   renderCart();
 
   if (currentSeat === item.seatBtn) {
@@ -182,6 +187,39 @@ function renderCart() {
     total = total + item.price;
   });
   cartTotal.textContent = "$" + total;
+}
+
+function saveCart() {
+  const seatIds = cart.map(function (item) {
+    return item.seatId;
+  });
+  localStorage.setItem("cart", JSON.stringify(seatIds));
+}
+
+function loadCart() {
+  const saved = localStorage.getItem("cart");
+  if (!saved) return;
+
+  const seatIds = JSON.parse(saved);
+
+  seatIds.forEach(function (seatId) {
+    const seatBtn = venueSections.querySelector('[data-seat-id="' + seatId + '"]');
+    if (!seatBtn) return;
+    if (seatBtn.dataset.sold === "true") return;
+
+    cart.push({
+      seatId: seatBtn.dataset.seatId,
+      section: seatBtn.dataset.section,
+      row: seatBtn.dataset.row,
+      seat: seatBtn.dataset.seat,
+      price: Number(seatBtn.dataset.price),
+      seatBtn: seatBtn,
+    });
+
+    seatBtn.classList.add("is-in-cart");
+  });
+
+  renderCart();
 }
 
 cartActionBtn.addEventListener("click", cartButtonClicked);
@@ -238,3 +276,4 @@ document.getElementById("moveRight").addEventListener("click", moveRight);
 document.getElementById("moveReset").addEventListener("click", resetView);
 
 buildVenue();
+loadCart();
