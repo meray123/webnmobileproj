@@ -89,7 +89,12 @@ function buildVenue() {
 }
 
 function inspectSeat(seatBtn) {
+  if (currentSeat) {
+    currentSeat.classList.remove("is-inspected");
+  }
+
   currentSeat = seatBtn;
+  currentSeat.classList.add("is-inspected");
 
   inspectorEmpty.hidden = true;
   inspectorDetails.hidden = false;
