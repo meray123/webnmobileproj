@@ -36,3 +36,11 @@ const VENUE = {
     },
   ],
 };
+
+function isSeatSold(rowIndex, seatIndex) {
+  return (rowIndex * 7 + seatIndex * 3) % 17 === 0;
+}
+
+function rowLetter(rowIndex) {
+  return String.fromCharCode(65 + rowIndex); 
+}
