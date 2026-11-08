@@ -14,6 +14,7 @@ const cartEmpty = document.getElementById("cartEmpty");
 const cartTotal = document.getElementById("cartTotal");
 
 const canvas = document.getElementById("canvas");
+const viewport = document.getElementById("viewport");
 
 let currentSeat = null;
 
@@ -279,6 +280,43 @@ document.getElementById("moveDown").addEventListener("click", moveDown);
 document.getElementById("moveLeft").addEventListener("click", moveLeft);
 document.getElementById("moveRight").addEventListener("click", moveRight);
 document.getElementById("moveReset").addEventListener("click", resetView);
+
+viewport.addEventListener("wheel", function (e) {
+  e.preventDefault();
+  if (e.deltaY < 0) {
+    zoomIn();
+  } else {
+    zoomOut();
+  }
+});
+
+let isDragging = false;
+let dragStartX = 0;
+let dragStartY = 0;
+
+viewport.addEventListener("mousedown", function (e) {
+  if (e.target.classList.contains("seat")) return;
+  isDragging = true;
+  dragStartX = e.clientX;
+  dragStartY = e.clientY;
+  viewport.style.cursor = "grabbing";
+});
+
+window.addEventListener("mousemove", function (e) {
+  if (!isDragging) return;
+  const dx = e.clientX - dragStartX;
+  const dy = e.clientY - dragStartY;
+  dragStartX = e.clientX;
+  dragStartY = e.clientY;
+  panX = panX + dx;
+  panY = panY + dy;
+  updateCanvasView();
+});
+
+window.addEventListener("mouseup", function () {
+  isDragging = false;
+  viewport.style.cursor = "grab";
+});
 
 buildVenue();
 loadCart();
